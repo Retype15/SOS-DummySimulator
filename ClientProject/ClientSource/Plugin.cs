@@ -17,7 +17,7 @@ namespace DummySimulator
         [Conditional("CLIENT")]
         public static void InitClient()
         {
-            Logger.LogDebug("DummySimulator.InitClient Executed...", leve: LogLevel.Trace);
+            Logger.LogDebug("DummySimulator.InitClient Executed...", level: LogLevel.Trace);
             API.On(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy);
 
             API.RegisterConfig(() => DummyConfig.Instance);
