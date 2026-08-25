@@ -6,6 +6,7 @@
 #pragma warning disable IDE0290
 
 using System.Diagnostics;
+using DummySimulator.Configs;
 using SOS;
 
 namespace DummySimulator
@@ -16,11 +17,16 @@ namespace DummySimulator
         [Conditional("CLIENT")]
         public static void InitClient()
         {
+            Logger.LogDebug("DummySimulator.InitClient Executed...", leve: LogLevel.Trace);
+            API.On(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy);
+
+            API.RegisterConfig(() => DummyConfig.Instance);
         }
 
         [Conditional("CLIENT")]
         public static void DisposeClient()
         {
+            API.Off(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy);
         }
     }
 }
