@@ -82,5 +82,13 @@ namespace DummySimulator.Configs
             TryInitConfig("DummySimulated", out _dummySimulated);
             TryInitConfig("DummyCharacterXML", out _dummyCharacterXMLRaw);
         }
+
+        #region Migration methods
+
+        internal void MigrateDummyDeathCount(int value) => DummyDeathCount = value;
+        internal void MigrateDummySimulated(bool value) => DummySimulated = value;
+        internal void MigrateDummyCharacterXML(XElement value) => DummyCharacterXML = value;
+
+        #endregion
     }
 }
