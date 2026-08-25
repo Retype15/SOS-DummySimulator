@@ -1,0 +1,18 @@
+<Project>
+    <PropertyGroup>
+        <ProjectName>SOS.DummySimulator</ProjectName>
+        <AssemblyName>DummySimulator</AssemblyName>
+    </PropertyGroup>
+
+    <Import Project="UserBuildData.props" Condition="Exists('UserBuildData.props')" />
+
+    <PropertyGroup>
+        <RefsPath Condition="'$(RefsPath)'==''">$(MSBuildThisFileDirectory)Refs</RefsPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="SOS.SDK">
+            <HintPath>$(RefsPath)\SOS.SDK.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>
