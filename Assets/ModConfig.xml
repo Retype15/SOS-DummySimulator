@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModConfig>
+    <Config File="%ModDir%/Config/DummySettings.xml" Target="Client" />
+    <FileGroup>  
+        <Conditional IsLoaded="true" Dependencies="S.O.S - Standard Operations Schematics" />  
+        <Assembly File="%ModDir%/bin/Client/Linux/DummySimulator.dll" Target="Client" Platform="Linux" Optional="true" />
+        <Assembly File="%ModDir%/bin/Client/OSX/DummySimulator.dll" Target="Client" Platform="OSX" Optional="true" />
+        <Assembly File="%ModDir%/bin/Client/Windows/DummySimulator.dll" Target="Client" Platform="Windows" Optional="true" /> 
+    </FileGroup>
+</ModConfig>

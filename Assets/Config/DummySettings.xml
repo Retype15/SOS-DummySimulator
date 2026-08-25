@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+    <Settings>
+        <!-- Medical Sim -->
+        <Setting Name="DummyDeathCount" Type="int" Value="0" ShowInMenus="false" />
+        <Setting Name="DummySimulated" Type="bool" Value="false" ShowInMenus="false" />
+        <Setting Name="DummyCharacterXML" Type="string" Value="" ShowInMenus="false" />
+    </Settings>
+</Configuration>

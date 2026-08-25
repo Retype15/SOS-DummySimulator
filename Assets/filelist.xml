@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contentpackage name="S.O.S - DummySimulator" modversion="1.0.0" gameversion="1.13.4.0" corepackage="false" steamworkshopid="0000000000">
+    <Text file="%ModDir%/Localization/English.xml" />
+</contentpackage>
