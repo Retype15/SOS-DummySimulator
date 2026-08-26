@@ -128,7 +128,7 @@ namespace DummySimulator
                 playBtn.Text = ClinicalSimulatorManager.IsPlaying ? "PAUSE" : "START";
             });
 
-            var speedDropdown = new GUIDropDown(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), text: "Speed", elementCount: 4)
+            var speedDropdown = new GUIDropDown(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), text: "Speed", elementCount: 4, dropAbove: true)
             {
                 ToolTip = Texts.Get("sos.sim.speedDropdown", "More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer."),
                 OnSelected = (comp, obj) =>
