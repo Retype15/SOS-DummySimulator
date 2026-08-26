@@ -130,7 +130,7 @@ namespace DummySimulator
 
             var speedDropdown = new GUIDropDown(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), text: "Speed", elementCount: 4)
             {
-                ToolTip = Texts.Get("sos.aff.speedDropdown", "More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer."),
+                ToolTip = Texts.Get("sos.sim.speedDropdown", "More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer."),
                 OnSelected = (comp, obj) =>
                 {
                     string s = (string)obj;
@@ -333,7 +333,7 @@ namespace DummySimulator
 
             _ = new GUIButton(new RectTransform(new Vector2(1f, 0.18f), menuLayout.RectTransform), "CLOSE", style: "GUIButtonSmall")
             {
-                ToolTip = Texts.Get("sos.misc.close_button", "Closes this menu."),
+                ToolTip = Texts.Get("sos.sim.close_button", "Closes this menu."),
                 OnClicked = (_, _) => { activeAfflictionMenu?.Parent?.RemoveChild(activeAfflictionMenu); activeAfflictionMenu = null; return true; }
             };
         }

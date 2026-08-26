@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Castilian Spanish" nowhitespace="false" translatedname="Castellano">
+	<!-- Tabs -->
+    <sos.tab.simulator>SIMULADOR</sos.tab.simulator>
+	<sos.tab.simulator_tooltip>Abre el simulador clínico para probar tratamientos y aflicciones en un paciente ficticio.</sos.tab.simulator_tooltip>
+
+    <!-- Simulator -->
+	<sos.sim.speedDropdown>Más de x1 aún están en progreso. \nFunciona bien en un jugador, pero no en multijugador.</sos.aff.speedDropdown>
+	<sos.sim.play_tooltip>Inicia la simulación clínica.</sos.sim.play_tooltip>
+	<sos.sim.pause_tooltip>Pausa la simulación clínica.</sos.sim.pause_tooltip>
+	<sos.sim.reset_tooltip>Restablece la salud del paciente a su estado inicial.</sos.sim.reset_tooltip>
+	<sos.sim.drop_tooltip>Descarta al paciente actual.</sos.sim.drop_tooltip>
+	<sos.sim.set_max_tooltip>Establece la fuerza de esta aflicción al máximo.</sos.sim.set_max_tooltip>
+	<sos.sim.remove_tooltip>Elimina esta aflicción del paciente.</sos.sim.remove_tooltip>
+	<sos.sim.apply_item_tooltip>Simula el uso de este objeto en el paciente para ver sus efectos.</sos.sim.apply_item_tooltip>
+	<sos.sim.close_button>Cierra este menú.</sos.misc.close_button>
+
+    <!-- Dummie Names -->
+	<sos.dummyname.rand.1>Sujeto de Prueba #[id]</sos.dummyname.rand.1>
+	<sos.dummyname.rand.2>No Es Una Persona Real #[id]</sos.dummyname.rand.2>
+	<sos.dummyname.rand.3>Probablemente Siente #[id]</sos.dummyname.rand.3>
+	<sos.dummyname.rand.4>No Pienses En Ello #[id]</sos.dummyname.rand.4>
+	<sos.dummyname.rand.5>No Prestes Atención A Los Gritos #[id]</sos.dummyname.rand.5>
+	<sos.dummyname.rand.6>Probablemente Está Bien #[id]</sos.dummyname.rand.6>
+	<sos.dummyname.rand.7>#[id] Tiene Una Familia</sos.dummyname.rand.7>
+	<sos.dummyname.rand.8>#[id] Sabe Lo Que Hiciste</sos.dummyname.rand.8>
+</infotexts>

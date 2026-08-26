@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
-    <schema.shared.loaded>[SCHEMA] Mod Loaded Successfully.</schema.shared.loaded>
-    <schema.shared.unloaded>[SCHEMA] Mod Unloaded.</schema.shared.unloaded>
+	<!-- Tabs -->
+	<sos.tab.simulator>SIMULATOR</sos.tab.simulator>
+	<sos.tab.simulator_tooltip>Opens the clinical simulator to test treatments and afflictions on a dummy patient.</sos.tab.simulator_tooltip>
+
+	<!-- Simulator -->
+	<sos.sim.speedDropdown>More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer.</sos.aff.speedDropdown>
+	<sos.sim.play_tooltip>Starts the clinical simulation.</sos.sim.play_tooltip>
+	<sos.sim.pause_tooltip>Pauses the clinical simulation.</sos.sim.pause_tooltip>
+	<sos.sim.reset_tooltip>Resets the patient's health to its initial state.</sos.sim.reset_tooltip>
+	<sos.sim.drop_tooltip>Discards the current patient.</sos.sim.drop_tooltip>
+	<sos.sim.set_max_tooltip>Sets this affliction's strength to maximum.</sos.sim.set_max_tooltip>
+	<sos.sim.remove_tooltip>Removes this affliction from the patient.</sos.sim.remove_tooltip>
+	<sos.sim.apply_item_tooltip>Simulates using this item on the patient to see its effects.</sos.sim.apply_item_tooltip>
+	<sos.sim.close_button>Closes this menu.</sos.misc.close_button>
+
+	<!-- Dummie Names -->
+	<sos.dummyname.rand.1>Dummy Subject #[id]</sos.dummyname.rand.1>
+	<sos.dummyname.rand.2>Not A Real Person #[id]</sos.dummyname.rand.2>
+	<sos.dummyname.rand.3>Probably Sentient #[id]</sos.dummyname.rand.3>
+	<sos.dummyname.rand.4>Do Not Think About It #[id]</sos.dummyname.rand.4>
+	<sos.dummyname.rand.5>Don't Mind The Screaming #[id]</sos.dummyname.rand.5>
+	<sos.dummyname.rand.6>Probably Fine #[id]</sos.dummyname.rand.6>
+	<sos.dummyname.rand.7>Has A Family #[id]</sos.dummyname.rand.7>
+	<sos.dummyname.rand.8>Knows What You Did</sos.dummyname.rand.8>
 </infotexts>

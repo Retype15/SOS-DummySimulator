@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="French" nowhitespace="false" translatedname="Français">
+	<!-- Tabs -->
+	<sos.tab.simulator>SIMULATEUR</sos.tab.simulator>
+	<sos.tab.simulator_tooltip>Ouvre le simulateur clinique pour tester traitements et affections sur un patient factice.</sos.tab.simulator_tooltip>
+
+	<!-- Simulator -->
+	<sos.sim.speedDropdown>Plus de x1 sont encore en cours. \nFonctionne correctement en solo, mais pas du tout en multijoueur.</sos.aff.speedDropdown>
+	<sos.sim.play_tooltip>Démarre la simulation clinique.</sos.sim.play_tooltip>
+	<sos.sim.pause_tooltip>Met en pause la simulation clinique.</sos.sim.pause_tooltip>
+	<sos.sim.reset_tooltip>Réinitialise la santé du patient à son état initial.</sos.sim.reset_tooltip>
+	<sos.sim.drop_tooltip>Abandonne le patient actuel.</sos.sim.drop_tooltip>
+	<sos.sim.set_max_tooltip>Définit la force de cette affection au maximum.</sos.sim.set_max_tooltip>
+	<sos.sim.remove_tooltip>Retire cette affection du patient.</sos.sim.remove_tooltip>
+	<sos.sim.apply_item_tooltip>Simule l'utilisation de cet objet sur le patient pour voir ses effets.</sos.sim.apply_item_tooltip>
+	<sos.sim.close_button>Ferme ce menu.</sos.misc.close_button>
+
+	<!-- Dummie Names -->
+	<sos.dummyname.rand.1>Sujet Factice #[id]</sos.dummyname.rand.1>
+	<sos.dummyname.rand.2>Pas Une Vraie Personne #[id]</sos.dummyname.rand.2>
+	<sos.dummyname.rand.3>Probablement Doué de Sensibilité #[id]</sos.dummyname.rand.3>
+	<sos.dummyname.rand.4>N'y Pensez Pas #[id]</sos.dummyname.rand.4>
+	<sos.dummyname.rand.5>Ne Faites Pas Attention Aux Cris #[id]</sos.dummyname.rand.5>
+	<sos.dummyname.rand.6>Probablement En Vie #[id]</sos.dummyname.rand.6>
+	<sos.dummyname.rand.7>A Une Famille #[id]</sos.dummyname.rand.7>
+	<sos.dummyname.rand.8>Sait Ce Que Vous Avez Fait</sos.dummyname.rand.8>
+</infotexts>
