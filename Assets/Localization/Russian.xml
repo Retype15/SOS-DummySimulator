@@ -5,7 +5,7 @@
 	<sos.tab.simulator_tooltip>Открывает клинический симулятор для тестирования лечения и недугов на манекене.</sos.tab.simulator_tooltip>
 
 	<!-- Simulator -->
-	<sos.sim.speedDropdown>Более x1 все еще в разработке. \nРаботает в одиночной игре, но не в многопользовательской.</sos.aff.speedDropdown>
+	<sos.sim.speedDropdown>Более x1 все еще в разработке. \nРаботает в одиночной игре, но не в многопользовательской.</sos.sim.speedDropdown>
 	<sos.sim.play_tooltip>Запускает клиническую симуляцию.</sos.sim.play_tooltip>
 	<sos.sim.pause_tooltip>Приостанавливает клиническую симуляцию.</sos.sim.pause_tooltip>
 	<sos.sim.reset_tooltip>Сбрасывает здоровье пациента до начального состояния.</sos.sim.reset_tooltip>
@@ -13,7 +13,7 @@
 	<sos.sim.set_max_tooltip>Устанавливает силу этого недуга на максимум.</sos.sim.set_max_tooltip>
 	<sos.sim.remove_tooltip>Удаляет этот недуг у пациента.</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>Симулирует использование этого предмета на пациенте.</sos.sim.apply_item_tooltip>
-	<sos.sim.close_button>Закрывает это меню.</sos.misc.close_button>
+	<sos.sim.close_button>Закрывает это меню.</sos.sim.close_button>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Подопытный #[id]</sos.dummyname.rand.1>

@@ -5,7 +5,7 @@
 	<sos.tab.simulator_tooltip>Ouvre le simulateur clinique pour tester traitements et affections sur un patient factice.</sos.tab.simulator_tooltip>
 
 	<!-- Simulator -->
-	<sos.sim.speedDropdown>Plus de x1 sont encore en cours. \nFonctionne correctement en solo, mais pas du tout en multijoueur.</sos.aff.speedDropdown>
+	<sos.sim.speedDropdown>Plus de x1 sont encore en cours. \nFonctionne correctement en solo, mais pas du tout en multijoueur.</sos.sim.speedDropdown>
 	<sos.sim.play_tooltip>Démarre la simulation clinique.</sos.sim.play_tooltip>
 	<sos.sim.pause_tooltip>Met en pause la simulation clinique.</sos.sim.pause_tooltip>
 	<sos.sim.reset_tooltip>Réinitialise la santé du patient à son état initial.</sos.sim.reset_tooltip>
@@ -13,7 +13,7 @@
 	<sos.sim.set_max_tooltip>Définit la force de cette affection au maximum.</sos.sim.set_max_tooltip>
 	<sos.sim.remove_tooltip>Retire cette affection du patient.</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>Simule l'utilisation de cet objet sur le patient pour voir ses effets.</sos.sim.apply_item_tooltip>
-	<sos.sim.close_button>Ferme ce menu.</sos.misc.close_button>
+	<sos.sim.close_button>Ferme ce menu.</sos.sim.close_button>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Sujet Factice #[id]</sos.dummyname.rand.1>
