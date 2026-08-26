@@ -15,4 +15,6 @@
             <HintPath>$(RefsPath)\SOS.SDK.dll</HintPath>
         </Reference>
     </ItemGroup>
+
+    <Import Project="CheckLocalization.targets" />
 </Project>

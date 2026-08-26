@@ -118,9 +118,9 @@ namespace DummySimulator
 
             var playBtn = new GUIButton(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), "START", style: "DeviceButton")
             {
-                OnDrawToolTip = component => component.ToolTip = Texts.Get(
-                    ClinicalSimulatorManager.IsPlaying ? "sos.sim.pause_tooltip" : "sos.sim.play_tooltip",
-                    ClinicalSimulatorManager.IsPlaying ? "Pauses the clinical simulation." : "Starts the clinical simulation."),
+                OnDrawToolTip = component => component.ToolTip = ClinicalSimulatorManager.IsPlaying ?
+                    Texts.Get("sos.sim.pause_tooltip", "Pauses the clinical simulation.") :
+                    Texts.Get("sos.sim.play_tooltip", "Starts the clinical simulation."),
                 OnClicked = (_, _) => { ClinicalSimulatorManager.HasPlaying(!ClinicalSimulatorManager.IsPlaying); return true; }
             };
             _ = new GUICustomComponent(new RectTransform(Vector2.Zero, playBtn.RectTransform), onUpdate: (dt, c) =>
@@ -143,9 +143,9 @@ namespace DummySimulator
 
             var actionBtn = new GUIButton(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), "DROP", style: "DeviceButton")
             {
-                OnDrawToolTip = component => component.ToolTip = Texts.Get(
-                    ClinicalSimulatorManager.HasStarted ? "sos.sim.drop_tooltip" : "sos.sim.reset_tooltip",
-                    ClinicalSimulatorManager.HasStarted ? "Discards the current patient." : "Resets the patient's health to its initial state."),
+                OnDrawToolTip = component => component.ToolTip = ClinicalSimulatorManager.HasStarted ?
+                    Texts.Get("sos.sim.reset_tooltip", "Resets the patient's health to its initial state.") :
+                    Texts.Get("sos.sim.drop_tooltip", "Discards the current patient."),
                 OnClicked = (_, _) =>
                 {
                     if (ClinicalSimulatorManager.HasStarted)
