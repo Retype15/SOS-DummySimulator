@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Simplified Chinese" nowhitespace="true" translatedname="中文">
 	<!-- Tabs -->
-	<sos.tab.simulator>模拟器</sos.tab.simulator>
-	<sos.tab.simulator_tooltip>打开临床模拟器，在假人患者身上测试治疗和病症。</sos.tab.simulator_tooltip>
+	<sos.tab.simulator.title>模拟器</sos.tab.simulator.title>
+	<sos.tab.simulator.tooltip>打开临床模拟器，在假人患者身上测试治疗和病症。</sos.tab.simulator.tooltip>
 
 	<!-- Simulator -->
 	<sos.sim.speedDropdown>x1 以上仍在开发中。\n在单人游戏中运行良好，但在多人游戏中完全不行。</sos.sim.speedDropdown>

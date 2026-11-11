@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="French" nowhitespace="false" translatedname="Français">
 	<!-- Tabs -->
-	<sos.tab.simulator>SIMULATEUR</sos.tab.simulator>
-	<sos.tab.simulator_tooltip>Ouvre le simulateur clinique pour tester traitements et affections sur un patient factice.</sos.tab.simulator_tooltip>
+	<sos.tab.simulator.title>SIMULATEUR</sos.tab.simulator.title>
+	<sos.tab.simulator.tooltip>Ouvre le simulateur clinique pour tester traitements et affections sur un patient factice.</sos.tab.simulator.tooltip>
 
 	<!-- Simulator -->
 	<sos.sim.speedDropdown>Plus de x1 sont encore en cours. \nFonctionne correctement en solo, mais pas du tout en multijoueur.</sos.sim.speedDropdown>

@@ -8,15 +8,17 @@
 using System.Xml.Linq;
 using Barotrauma;
 using Barotrauma.LuaCs.Data;
+using Microsoft.Xna.Framework;
+
 using SOS;
 using SOS.Configs;
+using SOS.Extensions;
 
 namespace DummySimulator.Configs
 {
     public sealed class DummyConfig : ConfigDirtySaver, ISOSConfig
     {
-        public string Id => "SOS.DummyConfig";
-        public double Order => 0;
+        public const string ID = "SOS.DummyConfig";
 
         private static DummyConfig? _instance;
         public static DummyConfig Instance => _instance ??= new();
@@ -34,9 +36,12 @@ namespace DummySimulator.Configs
             SaveChanges(Plugin.Instance.ConfigService);
         }
 
-        public bool DrawSettings(GUIListBox container)
+        public void Draw(RectTransform rectT)
         {
-            return true;
+            var l = new SOS.GUI.GUILayoutBuilder(rectT);
+            l.Header("Dummy Manager Settings", Color.Gold);
+            l.ButtonToResetSection(this);
+            l.Separator();
         }
 
         public void Reset()
@@ -44,8 +49,7 @@ namespace DummySimulator.Configs
             DummyDeathCount = 0;
             DummySimulated = false;
             DummyCharacterXML = XElement.Parse("<Character />");
-
-            _dummyCharacterXML = null;
+            if (ClinicalSimulatorManager.Patient != null) ClinicalSimulatorManager.DiscardPatient();
         }
 
         private readonly ISettingBase<int> _dummyDeathCount;

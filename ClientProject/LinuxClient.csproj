@@ -41,6 +41,9 @@
     <Reference Include="MoonSharp.Interpreter">
         <HintPath>$(RefsPath)\MoonSharp.Interpreter.dll</HintPath>
     </Reference>
+    <Reference Include="SOS.SDK">
+        <HintPath>$(RefsPath)\Linux\SOS.SDK.dll</HintPath>
+    </Reference>
     <Reference Include="XNATypes">
         <HintPath>$(RefsPath)\XNATypes.dll</HintPath>
     </Reference>

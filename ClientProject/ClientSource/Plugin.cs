@@ -19,23 +19,23 @@ namespace DummySimulator
         public static void InitClient()
         {
             Logger.LogDebug("DummySimulator.InitClient Executed...", level: LogLevel.Trace);
-            API.On(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy);
+            API.On(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy, EventPriority.System);
 
-            API.RegisterConfig(() => DummyConfig.Instance);
+            API.RegisterConfig(() => DummyConfig.Instance, DummyConfig.ID, 1);
 
-            API.On<int>("SOS.Migration.DummyDeathCount", DummyConfig.Instance.MigrateDummyDeathCount);
-            API.On<bool>("SOS.Migration.DummySimulated", DummyConfig.Instance.MigrateDummySimulated);
-            API.On<XElement>("SOS.Migration.DummyCharacterXML", DummyConfig.Instance.MigrateDummyCharacterXML);
+            API.On<int>("SOS.Migration.DummyDeathCount", DummyConfig.Instance.MigrateDummyDeathCount, EventPriority.State);
+            API.On<bool>("SOS.Migration.DummySimulated", DummyConfig.Instance.MigrateDummySimulated, EventPriority.State);
+            API.On<XElement>("SOS.Migration.DummyCharacterXML", DummyConfig.Instance.MigrateDummyCharacterXML, EventPriority.State);
         }
 
         [Conditional("CLIENT")]
         public static void DisposeClient()
         {
-            API.Off(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy);
+            API.Off(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy, EventPriority.System);
 
-            API.Off<int>("SOS.Migration.DummyDeathCount", DummyConfig.Instance.MigrateDummyDeathCount);
-            API.Off<bool>("SOS.Migration.DummySimulated", DummyConfig.Instance.MigrateDummySimulated);
-            API.Off<XElement>("SOS.Migration.DummyCharacterXML", DummyConfig.Instance.MigrateDummyCharacterXML);
+            API.Off<int>("SOS.Migration.DummyDeathCount", DummyConfig.Instance.MigrateDummyDeathCount, EventPriority.State);
+            API.Off<bool>("SOS.Migration.DummySimulated", DummyConfig.Instance.MigrateDummySimulated, EventPriority.State);
+            API.Off<XElement>("SOS.Migration.DummyCharacterXML", DummyConfig.Instance.MigrateDummyCharacterXML, EventPriority.State);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Latinamerican Spanish" nowhitespace="false" translatedname="Español Latinoamericano">
 	<!-- Tabs -->
-	<sos.tab.simulator>SIMULADOR</sos.tab.simulator>
-	<sos.tab.simulator_tooltip>Abre el simulador clínico para probar tratamientos y aflicciones en un paciente ficticio.</sos.tab.simulator_tooltip>
+	<sos.tab.simulator.title>SIMULADOR</sos.tab.simulator.title>
+	<sos.tab.simulator.tooltip>Abre el simulador clínico para probar tratamientos y aflicciones en un paciente ficticio.</sos.tab.simulator.tooltip>
 
 	<!-- Simulator -->
 	<sos.sim.speedDropdown>Más de x1 aún están en progreso. \nFunciona bien en un jugador, pero no en multijugador.</sos.sim.speedDropdown>

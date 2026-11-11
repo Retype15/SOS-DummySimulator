@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
 	<!-- Tabs -->
-	<sos.tab.simulator>SIMULATOR</sos.tab.simulator>
-	<sos.tab.simulator_tooltip>Opens the clinical simulator to test treatments and afflictions on a dummy patient.</sos.tab.simulator_tooltip>
+	<sos.tab.simulator.title>SIMULATOR</sos.tab.simulator.title>
+	<sos.tab.simulator.tooltip>Opens the clinical simulator to test treatments and afflictions on a dummy patient.</sos.tab.simulator.tooltip>
 
 	<!-- Simulator -->
 	<sos.sim.speedDropdown>More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer.</sos.sim.speedDropdown>

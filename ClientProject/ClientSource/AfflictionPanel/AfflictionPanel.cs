@@ -13,30 +13,21 @@ using SOS;
 namespace DummySimulator
 {
     // MARK: - Clinic SIM
-    [AutoRegister]
+    [AutoRegister("SOS.Tab.Simulator", 10)]
     public class DummySimulator : ISOSTab, IDisposable
     {
         private const int MENU_WIDTH = 280;
         private const int MENU_HEIGHT = 220;
 
-        public string Id => "SOS.DummySimulator";
-        public double Order => 10;
-        public string TabName => Texts.Get("sos.tab.simulator", "SIMULATOR").Value;
-        public string ToolTip => Texts.Get("sos.tab.simulator_tooltip").Value;
-        private GUIFrame? _container;
         private static GUIComponent? activeAfflictionMenu;
         private static Prefab? CurrentPrefab;
         private GUIListBox? _affList;
 
-        private Action<Prefab>? _onPrimary;
-
         public bool CanHandle(Prefab prefab) => prefab is ItemPrefab || prefab is AfflictionPrefab;
 
-        public void Init(GUIComponent parentContainer)
+        public void Init(GUIFrame container, GUIButton tabButton)
         {
-            _container = new GUIFrame(new RectTransform(Vector2.One, parentContainer.RectTransform), style: null) { Visible = false };
-
-            var simView = new GUIFrame(new RectTransform(new Vector2(1f, 0.88f), _container.RectTransform, Anchor.TopCenter), style: null)
+            var simView = new GUIFrame(new RectTransform(new Vector2(1f, 0.88f), container.RectTransform, Anchor.TopCenter), style: null)
             {
                 CanBeFocused = false
             };
@@ -71,8 +62,8 @@ namespace DummySimulator
                         // iconos de afliccion
                         if (Barotrauma.GUI.MouseOn?.UserData is Affliction highlightedAff)
                         {
-                            if (primaryClicked) _onPrimary?.Invoke(highlightedAff.Prefab);
-                            else if (secondaryClicked) ShowSimulationMenu(_container, highlightedAff.Prefab, null);
+                            if (primaryClicked) API.Emit<Prefab>(CommKeys.SelectTarget, highlightedAff.Prefab);
+                            else if (secondaryClicked) ShowSimulationMenu(container, highlightedAff.Prefab, null);
                             return;
                         }
 
@@ -82,8 +73,8 @@ namespace DummySimulator
                             var hovered = _affList.Content.Children.FirstOrDefault(child => child.Rect.Contains(PlayerInput.MousePosition.ToPoint()));
                             if (hovered?.UserData is Affliction affFromList)
                             {
-                                if (primaryClicked) _onPrimary?.Invoke(affFromList.Prefab);
-                                else if (secondaryClicked) ShowSimulationMenu(_container, affFromList.Prefab, null);
+                                if (primaryClicked) API.Emit<Prefab>(CommKeys.SelectTarget, affFromList.Prefab);
+                                else if (secondaryClicked) ShowSimulationMenu(container, affFromList.Prefab, null);
                                 return;
                             }
                         }
@@ -94,12 +85,12 @@ namespace DummySimulator
                             var limbHealth = health.limbHealths[highlighted];
                             var limb = health.Character.AnimController.Limbs.FirstOrDefault(l => health.GetMatchingLimbHealth(l) == limbHealth);
                             if (limb != null && CurrentPrefab != null)
-                                ShowSimulationMenu(_container, CurrentPrefab, limb);
+                                ShowSimulationMenu(container, CurrentPrefab, limb);
                         }
                     }
                 });
 
-            var toolbar = new GUIFrame(new RectTransform(new Vector2(1f, 0f), _container.RectTransform, Anchor.BottomCenter), style: "GUIFrameBottom")
+            var toolbar = new GUIFrame(new RectTransform(new Vector2(1f, 0f), container.RectTransform, Anchor.BottomCenter), style: "GUIFrameBottom")
             {
                 RectTransform = { MinSize = new Point(0, 38), MaxSize = new Point(int.MaxValue, 38) }
             };
@@ -234,23 +225,12 @@ namespace DummySimulator
             }
         }
 
-        public void Show(Prefab prefab, Action<Prefab> onPrimary, Action<Prefab> onSecondary)
+        public void Update(Prefab target)
         {
-            if (_container == null) return;
-            CurrentPrefab = prefab;
-            _onPrimary = onPrimary;
+            CurrentPrefab = target;
 
             if (ClinicalSimulatorManager.Patient == null || ClinicalSimulatorManager.Patient.Removed)
-            {
                 ClinicalSimulatorManager.Initialize();
-            }
-
-            _container.Visible = true;
-        }
-
-        public void Hide()
-        {
-            if (_container != null) _container.Visible = false;
         }
 
         private static void ShowSimulationMenu(GUIFrame mainFrame, Prefab prefab, Limb? targetLimb)
@@ -340,7 +320,6 @@ namespace DummySimulator
 
         public void Dispose()
         {
-            _container?.Parent?.RemoveChild(_container);
             activeAfflictionMenu?.Parent?.RemoveChild(activeAfflictionMenu);
             activeAfflictionMenu = null;
             GC.SuppressFinalize(this);

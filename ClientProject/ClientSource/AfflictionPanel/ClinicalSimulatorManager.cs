@@ -25,7 +25,7 @@ namespace DummySimulator
         public static float TimeScale { get; private set; } = 1f;
         public static bool HasStarted { get; private set; } = true;
 
-        public static int DeathCount { get; private set; }
+        public static int DeathCount { get => Config.DummyDeathCount; private set => Config.DummyDeathCount = value; }
         private static DummyConfig Config => DummyConfig.Instance;
 
         private static List<(AfflictionPrefab prefab, float strength, LimbType limb)>? snapshot;
@@ -149,11 +149,14 @@ namespace DummySimulator
 
         public static void Initialize()
         {
-            MedicalReflector.Validate();
+            if (!MedicalReflector.Validate())
+            {
+                Logger.LogError(Texts.Get("sos.dummy.initialize.error", "Error trying to apply reflection methods, skiping...").Value); // TODO: To Translate.
+                return;
+            }
             if (ActiveDummy != null && ActiveDummy.Character != null && !ActiveDummy.Character.Removed) return;
             ActiveDummy?.Discard();
             ActiveDummy = null;
-            DeathCount = Config.DummyDeathCount;
 
             bool loadedSuccessfully = false;
 
@@ -587,7 +590,6 @@ namespace DummySimulator
         public static void Destroy()
         {
             var config = DummyConfig.Instance;
-            config.DummyDeathCount = ClinicalSimulatorManager.DeathCount;
             var dummyCharacterXML = ClinicalSimulatorManager.ExportSaveData();
             if (dummyCharacterXML != null) config.DummyCharacterXML = dummyCharacterXML;
             config.DummySimulated = !ClinicalSimulatorManager.HasStarted;
