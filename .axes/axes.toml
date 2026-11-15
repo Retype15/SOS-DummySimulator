@@ -1,0 +1,22 @@
+name = "SOS.DummySimulator"
+version = "0.4.3"
+description = "A new project named 'SOS.DummySimulator', managed by `axes`."
+
+[scripts.test]
+desc = "Run a simple test echo command."
+run = """echo "✅ Test for '<name>' successful!""""
+
+[options.at_start]
+desc = "Commands to run when entering a session (e.g., `source .venv/bin/activate`)"
+run = "# echo 'Entering session...'"
+
+[options.at_exit]
+desc = "Commands to run when exiting a session (e.g., `docker-compose down`)"
+run = "# echo 'Exiting session...'"
+
+[options.open_with]
+
+[vars]
+GREETING = "Hello from an axes variable!"
+
+[env]
