@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <ProjectName>SOS.DummySimulator</ProjectName>
+        <ProjectName>S.O.S - Dummy Simulator</ProjectName>
         <AssemblyName>DummySimulator</AssemblyName>
     </PropertyGroup>
 
