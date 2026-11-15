@@ -4,6 +4,8 @@
 
 [b]S.O.S. - Dummy Simulator[/b] is the clinical training and medical simulation satellite plugin for [b]S.O.S. (Standard Operations Schematics)[/b] in [b]Barotrauma[/b]. Designed for doctors, combat medics, and modders, it integrates a fully interactive test patient directly into your S.O.S. inspector window—allowing you to experiment with lethal afflictions, test experimental treatments, and observe disease progression in real time without wasting precious medical supplies or endangering your crew.
 
+[b]<NEW>[/b] [i]Now compatible with [Neurotrauma-CS](https://steamcommunity.com/sharedfiles/filedetails/?id=3744761298)![/i] ([b][i]Only supports Neurotrauma CS fork[/i][/b])
+
 [h2]Key Features[/h2]
 
 [list]
@@ -61,7 +63,7 @@ This mod is an official extension and requires the following base mods installed
 
 [b]Q:[/b] [i]Is it compatible with Neurotrauma and custom medical mods?[/i]
 [list]
-[*] [b]A:[/b] Actually not. The simulator hooks directly into Barotrauma's native [code]CharacterHealth[/code] engine but doesn't fully supports all custom treats that Neurotrauma, but will be able to compatible a future. Other custom medical mods, probably yes.
+[*] [b]A:[/b] Actually... YES!. The simulator now can hooks your own path code to execute neurotrauma check logic, so finally u can ampute any body part of our dummies and hear how agonize  slowly and painfully... Enjoy it! :>
 [/list]
 
 [h2]License & Copyright[/h2]
