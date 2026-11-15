@@ -14,6 +14,16 @@
 	<sos.sim.remove_tooltip>Removes this affliction from the patient.</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>Simulates using this item on the patient to see its effects.</sos.sim.apply_item_tooltip>
 	<sos.sim.close_button>Closes this menu.</sos.sim.close_button>
+	<sos.sim.medical_skill>MED</sos.sim.medical_skill>
+	<sos.sim.medical_skill_tooltip>Medical skill the dummy operates with.</sos.sim.medical_skill_tooltip>
+
+	<!-- Surgery -->
+	<sos.sim.surgery_tools>Surgery Tools</sos.sim.surgery_tools>
+	<sos.sim.surgery_organs>Organs</sos.sim.surgery_organs>
+	<sos.sim.surgery_back>Back</sos.sim.surgery_back>
+	<sos.sim.surgery_back_tooltip>Returns to the full tool list.</sos.sim.surgery_back_tooltip>
+	<sos.sim.surgery_organ_ready>Operates on the selected limb.</sos.sim.surgery_organ_ready>
+	<sos.sim.surgery_organ_limb>Select the matching limb first.</sos.sim.surgery_organ_limb>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Dummy Subject #[id]</sos.dummyname.rand.1>
