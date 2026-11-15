@@ -44,6 +44,10 @@
     <Reference Include="SOS.SDK">
         <HintPath>$(RefsPath)\Linux\SOS.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Neurotrauma">
+        <HintPath>$(RefsPath)\Linux\Neurotrauma.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
     <Reference Include="XNATypes">
         <HintPath>$(RefsPath)\XNATypes.dll</HintPath>
     </Reference>

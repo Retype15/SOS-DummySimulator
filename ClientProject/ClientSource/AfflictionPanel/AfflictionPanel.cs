@@ -32,10 +32,13 @@ namespace DummySimulator
                 CanBeFocused = false
             };
 
+            NtSurgeryPanel.Attach(simView);
+
             _ = new GUICustomComponent(new RectTransform(Vector2.Zero, simView.RectTransform),
                 onUpdate: (dt, c) =>
                 {
                     ClinicalSimulatorManager.Update(dt);
+                    NtSurgeryPanel.Update();
 
                     if (activeAfflictionMenu != null)
                     {
@@ -49,9 +52,12 @@ namespace DummySimulator
                     var health = ClinicalSimulatorManager.Patient?.CharacterHealth;
                     if (health == null) return;
 
-                    if (ClinicalSimulatorManager.HealthWindowField?.GetValue(health) is GUIFrame nativeWindow && nativeWindow.RectTransform.Parent != simView.RectTransform)
+                    if (ClinicalSimulatorManager.HealthWindowField?.GetValue(health) is GUIFrame nativeWindow)
                     {
-                        AttachNativeWindow(nativeWindow, simView);
+                        if (nativeWindow.RectTransform.Parent != simView.RectTransform)
+                            AttachNativeWindow(nativeWindow, simView);
+
+                        ReserveToolColumn(nativeWindow, simView);
                     }
 
                     bool primaryClicked = PlayerInput.PrimaryMouseButtonClicked();
@@ -96,7 +102,7 @@ namespace DummySimulator
             };
             var tools = new GUILayoutGroup(new RectTransform(new Vector2(0.95f, 0f), toolbar.RectTransform, Anchor.Center) { MinSize = new Point(0, 26), MaxSize = new Point(int.MaxValue, 26) }, isHorizontal: true) { Stretch = true, AbsoluteSpacing = 15 };
 
-            var hpText = new GUITextBlock(new RectTransform(new Vector2(0.15f, 1f), tools.RectTransform), "HP: 100%", font: GUIStyle.SubHeadingFont, textAlignment: Alignment.Center);
+            var hpText = new GUITextBlock(new RectTransform(new Vector2(0.12f, 1f), tools.RectTransform), "HP: 100%", font: GUIStyle.SubHeadingFont, textAlignment: Alignment.Center);
             _ = new GUICustomComponent(new RectTransform(Vector2.Zero, tools.RectTransform), onUpdate: (dt, c) =>
             {
                 if (ClinicalSimulatorManager.Patient != null)
@@ -107,7 +113,22 @@ namespace DummySimulator
                 }
             });
 
-            var playBtn = new GUIButton(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), "START", style: "DeviceButton")
+            var medicalLayout = new GUILayoutGroup(new RectTransform(new Vector2(0.22f, 1f), tools.RectTransform), isHorizontal: true) { Stretch = true, AbsoluteSpacing = 4 };
+            _ = new GUITextBlock(new RectTransform(new Vector2(0.4f, 1f), medicalLayout.RectTransform), Texts.Get("sos.sim.medical_skill", "MED"), font: GUIStyle.SmallFont, textAlignment: Alignment.CenterRight)
+            {
+                ToolTip = Texts.Get("sos.sim.medical_skill_tooltip", "Medical skill the dummy operates with.")
+            };
+
+            var medicalInput = new GUINumberInput(new RectTransform(new Vector2(0.6f, 1f), medicalLayout.RectTransform), NumberType.Int)
+            {
+                MinValueInt = 0,
+                MaxValueInt = 100,
+                IntValue = ClinicalSimulatorManager.MedicalSkill,
+                ToolTip = Texts.Get("sos.sim.medical_skill_tooltip", "Medical skill the dummy operates with."),
+                OnValueChanged = input => ClinicalSimulatorManager.SetMedicalSkill(input.IntValue)
+            };
+
+            var playBtn = new GUIButton(new RectTransform(new Vector2(0.19f, 1f), tools.RectTransform), "START", style: "DeviceButton")
             {
                 OnDrawToolTip = component => component.ToolTip = ClinicalSimulatorManager.IsPlaying ?
                     Texts.Get("sos.sim.pause_tooltip", "Pauses the clinical simulation.") :
@@ -119,7 +140,7 @@ namespace DummySimulator
                 playBtn.Text = ClinicalSimulatorManager.IsPlaying ? "PAUSE" : "START";
             });
 
-            var speedDropdown = new GUIDropDown(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), text: "Speed", elementCount: 4, dropAbove: true)
+            var speedDropdown = new GUIDropDown(new RectTransform(new Vector2(0.19f, 1f), tools.RectTransform), text: "Speed", elementCount: 4, dropAbove: true)
             {
                 ToolTip = Texts.Get("sos.sim.speedDropdown", "More than x1 are still in progress. \nIt's work fine in Singleplayer, but not at all in Multiplayer."),
                 OnSelected = (comp, obj) =>
@@ -132,7 +153,7 @@ namespace DummySimulator
             foreach (string s in new[] { "x1", "x2", "x5", "x10" }) speedDropdown.AddItem(s, s);
             speedDropdown.SelectItem("x1");
 
-            var actionBtn = new GUIButton(new RectTransform(new Vector2(0.25f, 1f), tools.RectTransform), "DROP", style: "DeviceButton")
+            var actionBtn = new GUIButton(new RectTransform(new Vector2(0.19f, 1f), tools.RectTransform), "DROP", style: "DeviceButton")
             {
                 OnDrawToolTip = component => component.ToolTip = ClinicalSimulatorManager.HasStarted ?
                     Texts.Get("sos.sim.reset_tooltip", "Resets the patient's health to its initial state.") :
@@ -168,10 +189,10 @@ namespace DummySimulator
             scaleBasisField?.SetValue(nativeWindow.RectTransform, ScaleBasis.Normal);
 
             nativeWindow.RectTransform.IsFixedSize = false;
-            nativeWindow.RectTransform.RelativeSize = Vector2.One;
             nativeWindow.RectTransform.AbsoluteOffset = Point.Zero;
-            nativeWindow.RectTransform.Anchor = Anchor.Center;
-            nativeWindow.RectTransform.Pivot = Pivot.Center;
+            bool hasSurgeryColumn = NtSurgeryPanel.IsAvailable;
+            nativeWindow.RectTransform.Anchor = hasSurgeryColumn ? Anchor.CenterLeft : Anchor.Center;
+            nativeWindow.RectTransform.Pivot = hasSurgeryColumn ? Pivot.CenterLeft : Pivot.Center;
 
             nativeWindow.IgnoreLayoutGroups = true;
             nativeWindow.Color = Color.Transparent;
@@ -223,6 +244,21 @@ namespace DummySimulator
 
                 internalVerticalLayout.RectTransform.RecalculateChildren(true, true);
             }
+        }
+
+        private static void ReserveToolColumn(GUIFrame window, GUIFrame simView)
+        {
+            if (!NtSurgeryPanel.IsAvailable)
+            {
+                window.RectTransform.RelativeSize = Vector2.One;
+                return;
+            }
+
+            int viewWidth = simView.RectTransform.NonScaledSize.X;
+            if (viewWidth <= 0) return;
+
+            float reserved = Math.Clamp(NtSurgeryPanel.ColumnWidth / (float)viewWidth, 0f, 0.9f);
+            window.RectTransform.RelativeSize = new Vector2(1f - reserved, 1f);
         }
 
         public void Update(Prefab target)
@@ -322,6 +358,7 @@ namespace DummySimulator
         {
             activeAfflictionMenu?.Parent?.RemoveChild(activeAfflictionMenu);
             activeAfflictionMenu = null;
+            NtSurgeryPanel.Detach();
             GC.SuppressFinalize(this);
         }
 

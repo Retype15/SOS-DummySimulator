@@ -47,6 +47,7 @@ namespace DummySimulator.Configs
         public void Reset()
         {
             DummyDeathCount = 0;
+            DummyMedicalSkill = _dummyMedicalSkill.DefaultValue;
             DummySimulated = false;
             DummyCharacterXML = XElement.Parse("<Character />");
             if (ClinicalSimulatorManager.Patient != null) ClinicalSimulatorManager.DiscardPatient();
@@ -57,6 +58,13 @@ namespace DummySimulator.Configs
         {
             get => _dummyDeathCount.Value;
             set => _dummyDeathCount.SetIfNotEqual(value);
+        }
+
+        private readonly ISettingBase<int> _dummyMedicalSkill;
+        public int DummyMedicalSkill
+        {
+            get => _dummyMedicalSkill.Value;
+            set => _dummyMedicalSkill.SetIfNotEqual(value);
         }
 
         private readonly ISettingBase<bool> _dummySimulated;
@@ -83,6 +91,7 @@ namespace DummySimulator.Configs
                 => base.TryInitConfig(name, out setting, Plugin.Instance.ConfigService, Plugin.Instance.Package);
 
             TryInitConfig("DummyDeathCount", out _dummyDeathCount);
+            TryInitConfig("DummyMedicalSkill", out _dummyMedicalSkill);
             TryInitConfig("DummySimulated", out _dummySimulated);
             TryInitConfig("DummyCharacterXML", out _dummyCharacterXMLRaw);
         }

@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using System.Reflection;
 using System.Xml.Linq;
 using Barotrauma;
+using Barotrauma.Items.Components;
 using DummySimulator.Configs;
 using Microsoft.Xna.Framework;
 using SOS;
@@ -29,6 +30,18 @@ namespace DummySimulator
         private static DummyConfig Config => DummyConfig.Instance;
 
         private static List<(AfflictionPrefab prefab, float strength, LimbType limb)>? snapshot;
+
+        private const int MaxMedicalSkill = 100;
+
+        private static readonly Identifier MedicalSkillIdentifier = "medical";
+
+        private static readonly HashSet<Item> subjectItems = [];
+
+        private static readonly List<Item> purgeBuffer = [];
+
+        private static bool isApplyingItem;
+
+        public static int MedicalSkill { get => Config.DummyMedicalSkill; private set => Config.DummyMedicalSkill = value; }
 
         public static void HasPlaying(bool value) => IsPlaying = value;
         public static void SetTimeScale(float value) => TimeScale = value;
@@ -115,6 +128,8 @@ namespace DummySimulator
                 Character.CharacterHealth.SetHealthBarVisibility(false);
                 if (Character.CharacterHealth.SuicideButton != null) Character.CharacterHealth.SuicideButton.Visible = false;
                 if (Character.CharacterHealth.CPRButton != null) Character.CharacterHealth.CPRButton.Visible = false;
+
+                NeurotraumaBridge.Attach(Character);
             }
 
             public void ApplyInertia()
@@ -135,6 +150,8 @@ namespace DummySimulator
                 RescueNativeWindow();
                 if (CharacterHealth.OpenHealthWindow == Character.CharacterHealth)
                     MedicalReflector.OpenHealthWindowField?.SetValue(null, null);
+
+                NeurotraumaBridge.Detach(Character);
 
                 if (!Character.Removed)
                 {
@@ -176,6 +193,7 @@ namespace DummySimulator
                     var character = Character.Create(info.SpeciesName, new Vector2(0, -10000), "SOS_DUMMY", info, isRemotePlayer: false, hasAi: false, createNetworkEvent: false, spawnInitialItems: false, id: GetFreshDummyID());
                     ActiveDummy = new DummySubject(character, DeathCount);
                     ActiveDummy.SetupDummyEntity();
+                    CaptureSubjectItems();
 
                     XElement? healthNode = element.Element("health");
                     if (healthNode != null)
@@ -183,8 +201,10 @@ namespace DummySimulator
                         CharacterInfo.ApplyHealthData(Patient, healthNode);
                         MedicalReflector.HealthBiologicalUpdateMethod?.Invoke(Patient?.CharacterHealth, [0f]);
                         Patient?.CharacterHealth.CalculateVitality();
+                        NeurotraumaBridge.Attach(Patient);
                     }
 
+                    ApplyMedicalSkill();
                     loadedSuccessfully = true;
                 }
             }
@@ -221,6 +241,8 @@ namespace DummySimulator
             Character? character = Character.Create(prefab, new Vector2(0, -10000), "SOS_DUMMY", info, isRemotePlayer: false, hasAi: false, createNetworkEvent: false, spawnInitialItems: false, id: GetFreshDummyID());
             ActiveDummy = new DummySubject(character, DeathCount);
             ActiveDummy.SetupDummyEntity();
+            CaptureSubjectItems();
+            ApplyMedicalSkill();
         }
 
         private static void AssignSubjectIdentity(CharacterInfo info, int deathCount)
@@ -267,6 +289,7 @@ namespace DummySimulator
             if (Patient.InvisibleTimer < 1.0f) Patient.InvisibleTimer = float.MaxValue;
 
             Patient.CharacterHealth.UpdateClientSpecific(deltaTime);
+            PurgeItems();
 
             if (IsPlaying)
             {
@@ -277,6 +300,7 @@ namespace DummySimulator
                 }
                 float dt = deltaTime * TimeScale;
                 MedicalReflector.HealthBiologicalUpdateMethod?.Invoke(Patient.CharacterHealth, [dt]);
+                NeurotraumaBridge.Tick(Patient, dt);
             }
 
             var controlled = Character.Controlled;
@@ -347,13 +371,14 @@ namespace DummySimulator
         {
             if (Patient == null) return;
             Item? mockItem = null;
+            isApplyingItem = true;
             try
             {
                 mockItem = new Item(prefab, Vector2.Zero, null, id: GetFreshMockID());
 
                 Patient.Inventory?.TryPutItem(mockItem, Patient, CharacterInventory.AnySlot, false, false);
 
-                var user = Character.Controlled ?? Patient;
+                Character user = Patient;
                 var target = targetLimb ?? Patient.AnimController.MainLimb;
 
                 var meleeWeapon = mockItem.GetComponent<Barotrauma.Items.Components.MeleeWeapon>();
@@ -385,6 +410,8 @@ namespace DummySimulator
                 }
                 else
                 {
+                    FillContainedRequirements(mockItem);
+
                     foreach (var ic in mockItem.Components)
                     {
                         if (!ic.HasRequiredContainedItems(user, addMessage: false)) continue;
@@ -398,6 +425,7 @@ namespace DummySimulator
                         SoundPlayer.PlayUISound(GUISoundType.PickItem);
                     }
                 }
+                NeurotraumaBridge.ApplyItemTreatment(mockItem, user, Patient, target);
             }
             catch (Exception e)
             {
@@ -407,10 +435,139 @@ namespace DummySimulator
             {
                 if (mockItem != null && !mockItem.Removed)
                 {
+                    RemoveContainedItems(mockItem);
                     mockItem.ParentInventory?.RemoveItem(mockItem);
                     Entity.Spawner?.AddItemToRemoveQueue(mockItem);
                 }
+
+                isApplyingItem = false;
             }
+        }
+
+        private static void FillContainedRequirements(Item item)
+        {
+            ItemContainer? container = item.GetComponent<ItemContainer>();
+            if (container?.Inventory == null) return;
+
+            int usedSlots = container.Inventory.AllItems.Count();
+
+            foreach (ItemComponent component in item.Components)
+            {
+                if (!component.RequiredItems.TryGetValue(RelatedItem.RelationType.Contained, out List<RelatedItem>? required)) continue;
+
+                foreach (RelatedItem requirement in required)
+                {
+                    if (container.Inventory.AllItems.Any(existing => requirement.MatchesItem(existing))) continue;
+                    if (usedSlots >= container.Inventory.Capacity) return;
+
+                    ItemPrefab? containedPrefab = FindMatchingPrefab(requirement);
+                    if (containedPrefab == null || !TryAddContainedItem(container, containedPrefab)) continue;
+
+                    usedSlots++;
+                }
+            }
+
+            if (usedSlots > 0 || container.ContainableItems == null) return;
+
+            foreach (RelatedItem containable in container.ContainableItems)
+            {
+                ItemPrefab? containedPrefab = FindMatchingPrefab(containable);
+                if (containedPrefab == null || !TryAddContainedItem(container, containedPrefab)) continue;
+
+                break;
+            }
+        }
+
+        private static ItemPrefab? FindMatchingPrefab(RelatedItem related)
+            => ItemPrefab.Prefabs.Find(prefab => related.MatchesItem(prefab));
+
+        private static bool TryAddContainedItem(ItemContainer container, ItemPrefab prefab)
+        {
+            Item contained = new(prefab, Vector2.Zero, null, id: GetFreshMockID());
+
+            if (container.Inventory.TryPutItem(
+                contained,
+                user: null!,
+                createNetworkEvent: false,
+                triggerOnInsertedEffects: false))
+            {
+                return true;
+            }
+
+            Entity.Spawner?.AddItemToRemoveQueue(contained);
+            return false;
+        }
+
+        private static void RemoveContainedItems(Item item)
+        {
+            Inventory? inventory = item.OwnInventory;
+            if (inventory == null) return;
+
+            foreach (Item contained in inventory.AllItems.ToList())
+            {
+                inventory.RemoveItem(contained);
+                if (!contained.Removed) Entity.Spawner?.AddItemToRemoveQueue(contained);
+            }
+        }
+
+        public static void ApplySurgery(string itemIdentifier)
+        {
+            Limb? limb = SelectedLimb;
+            if (limb == null) return;
+
+            NeurotraumaBridge.ApplySurgeryFunction(itemIdentifier, Patient, Patient, limb);
+        }
+
+        public static Limb? SelectedLimb
+        {
+            get
+            {
+                if (Patient?.CharacterHealth == null) return null;
+                if (MedicalReflector.SelectedLimbIndexField?.GetValue(Patient.CharacterHealth) is not int index || index < 0) return null;
+                return Patient.AnimController.Limbs.FirstOrDefault(limb => limb.HealthIndex == index);
+            }
+        }
+
+        public static LimbType? SelectedLimbType => SelectedLimb?.type;
+
+        public static void SetMedicalSkill(int value)
+        {
+            MedicalSkill = Math.Clamp(value, 0, MaxMedicalSkill);
+            ApplyMedicalSkill();
+        }
+
+        public static void ApplyMedicalSkill()
+        {
+            Patient?.Info?.SetSkillLevel(MedicalSkillIdentifier, MedicalSkill);
+        }
+
+        private static void CaptureSubjectItems()
+        {
+            subjectItems.Clear();
+            if (Patient?.Inventory == null) return;
+
+            foreach (Item item in Patient.Inventory.AllItems) subjectItems.Add(item);
+        }
+
+        private static void PurgeItems()
+        {
+            if (isApplyingItem || Patient?.Inventory is not { } inventory) return;
+
+            int capacity = inventory.Capacity;
+            for (int i = 0; i < capacity; i++)
+            {
+                Item? item = inventory.GetItemAt(i);
+                if (item != null && !subjectItems.Contains(item)) purgeBuffer.Add(item);
+            }
+
+            if (purgeBuffer.Count == 0) return;
+
+            foreach (Item item in purgeBuffer)
+            {
+                if (!item.Removed) item.Remove();
+            }
+
+            purgeBuffer.Clear();
         }
 
         public static void MaybeKillDummy()
@@ -507,6 +664,10 @@ namespace DummySimulator
                     InjectAffliction(prefab, strength, limb);
                 }
             }
+            NeurotraumaBridge.Attach(Patient);
+
+            CaptureSubjectItems();
+            ApplyMedicalSkill();
 
             Patient.CharacterHealth?.CalculateVitality();
             IsPlaying = false;
@@ -519,6 +680,9 @@ namespace DummySimulator
             Patient.Revive();
             ActiveDummy?.ApplyInertia();
             Patient.CharacterHealth?.RemoveAllAfflictions();
+            NeurotraumaBridge.Attach(Patient);
+            CaptureSubjectItems();
+            ApplyMedicalSkill();
             Patient.CharacterHealth?.CalculateVitality();
             IsPlaying = false;
             HasStarted = true;
@@ -609,9 +773,14 @@ namespace DummySimulator
 
             if (Patient != null && !Patient.Removed)
             {
+                NeurotraumaBridge.Detach(Patient);
                 Patient.Remove();
             }
             ActiveDummy = null;
+
+            subjectItems.Clear();
+            purgeBuffer.Clear();
+            isApplyingItem = false;
         }
     }
 }

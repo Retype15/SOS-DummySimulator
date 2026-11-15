@@ -3,6 +3,7 @@
     <Settings>
         <!-- Medical Sim -->
         <Setting Name="DummyDeathCount" Type="int" Value="0" ShowInMenus="false" />
+        <Setting Name="DummyMedicalSkill" Type="int" Value="30" ShowInMenus="false" />
         <Setting Name="DummySimulated" Type="bool" Value="false" ShowInMenus="false" />
         <Setting Name="DummyCharacterXML" Type="string" Value="" ShowInMenus="false" />
     </Settings>

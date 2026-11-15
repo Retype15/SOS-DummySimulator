@@ -44,6 +44,10 @@
     <Reference Include="SOS.SDK">
         <HintPath>$(RefsPath)\OSX\SOS.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Neurotrauma">
+        <HintPath>$(RefsPath)\OSX\Neurotrauma.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
     <Reference Include="XNATypes">
         <HintPath>$(RefsPath)\XNATypes.dll</HintPath>
     </Reference>
