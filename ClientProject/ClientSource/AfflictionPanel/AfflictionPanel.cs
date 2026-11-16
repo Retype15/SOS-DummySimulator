@@ -32,13 +32,13 @@ namespace DummySimulator
                 CanBeFocused = false
             };
 
-            NtSurgeryPanel.Attach(simView);
+            SimulatorColumn.Attach(simView, container);
 
             _ = new GUICustomComponent(new RectTransform(Vector2.Zero, simView.RectTransform),
                 onUpdate: (dt, c) =>
                 {
                     ClinicalSimulatorManager.Update(dt);
-                    NtSurgeryPanel.Update();
+                    SimulatorColumn.Update();
 
                     if (activeAfflictionMenu != null)
                     {
@@ -190,9 +190,8 @@ namespace DummySimulator
 
             nativeWindow.RectTransform.IsFixedSize = false;
             nativeWindow.RectTransform.AbsoluteOffset = Point.Zero;
-            bool hasSurgeryColumn = NtSurgeryPanel.IsAvailable;
-            nativeWindow.RectTransform.Anchor = hasSurgeryColumn ? Anchor.CenterLeft : Anchor.Center;
-            nativeWindow.RectTransform.Pivot = hasSurgeryColumn ? Pivot.CenterLeft : Pivot.Center;
+            nativeWindow.RectTransform.Anchor = Anchor.CenterLeft;
+            nativeWindow.RectTransform.Pivot = Pivot.CenterLeft;
 
             nativeWindow.IgnoreLayoutGroups = true;
             nativeWindow.Color = Color.Transparent;
@@ -248,22 +247,17 @@ namespace DummySimulator
 
         private static void ReserveToolColumn(GUIFrame window, GUIFrame simView)
         {
-            if (!NtSurgeryPanel.IsAvailable)
-            {
-                window.RectTransform.RelativeSize = Vector2.One;
-                return;
-            }
-
             int viewWidth = simView.RectTransform.NonScaledSize.X;
             if (viewWidth <= 0) return;
 
-            float reserved = Math.Clamp(NtSurgeryPanel.ColumnWidth / (float)viewWidth, 0f, 0.9f);
+            float reserved = Math.Clamp(SimulatorColumn.ColumnWidth / (float)viewWidth, 0f, 0.9f);
             window.RectTransform.RelativeSize = new Vector2(1f - reserved, 1f);
         }
 
         public void Update(Prefab target)
         {
             CurrentPrefab = target;
+            ItemContentsPanel.SetTarget(target as ItemPrefab);
 
             if (ClinicalSimulatorManager.Patient == null || ClinicalSimulatorManager.Patient.Removed)
                 ClinicalSimulatorManager.Initialize();
@@ -358,7 +352,7 @@ namespace DummySimulator
         {
             activeAfflictionMenu?.Parent?.RemoveChild(activeAfflictionMenu);
             activeAfflictionMenu = null;
-            NtSurgeryPanel.Detach();
+            SimulatorColumn.Detach();
             GC.SuppressFinalize(this);
         }
 

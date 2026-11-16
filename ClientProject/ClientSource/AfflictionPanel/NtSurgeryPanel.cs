@@ -17,8 +17,6 @@ namespace DummySimulator
 {
     internal static class NtSurgeryPanel
     {
-        public const int ColumnWidth = 68;
-
         private const int OutlineSize = 44;
         private const int ButtonSize = 36;
         private const int EntrySpacing = 4;
@@ -32,29 +30,18 @@ namespace DummySimulator
 
         public static bool IsAvailable => NeurotraumaBridge.IsNeurotraumaLoaded;
 
-        public static void Attach(GUIFrame parent)
+        public static void Attach(GUIFrame section)
         {
             if (!IsAvailable || frame != null) return;
-            AttachCore(parent);
+            AttachCore(section);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void AttachCore(GUIFrame parent)
+        private static void AttachCore(GUIFrame section)
         {
             if (NtData.Entries.Count == 0) return;
 
-            frame = new GUIFrame(
-                new RectTransform(
-                    new Vector2(0f, 1f),
-                    parent.RectTransform,
-                    Anchor.CenterRight,
-                    minSize: new Point(ColumnWidth, 0),
-                    maxSize: new Point(ColumnWidth, int.MaxValue)),
-                style: null)
-            {
-                CanBeFocused = false
-            };
-
+            frame = section;
             BuildColumn();
         }
 
@@ -83,7 +70,7 @@ namespace DummySimulator
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void DetachCore()
         {
-            if (frame != null) frame.RectTransform.Parent = null;
+            frame?.ClearChildren();
             frame = null;
             gated.Clear();
             NtData.OpenMenu = null;
@@ -118,7 +105,7 @@ namespace DummySimulator
                 textAlignment: Alignment.Center,
                 wrap: true);
 
-            SizeRowToWrappedText(header.RectTransform, header, caption, MinHeaderHeight);
+            SimulatorColumn.FitRowToWrappedText(header.RectTransform, header, caption, MinHeaderHeight);
 
             if (openMenu != null)
             {
@@ -136,7 +123,7 @@ namespace DummySimulator
                 back.TextBlock.Wrap = true;
                 back.TextBlock.SetTextPos();
 
-                SizeRowToWrappedText(back.RectTransform, back.TextBlock, backText, MinBackHeight);
+                SimulatorColumn.FitRowToWrappedText(back.RectTransform, back.TextBlock, backText, MinBackHeight);
             }
 
             var list = new GUIListBox(new RectTransform(Vector2.One, column.RectTransform), style: null)
@@ -178,17 +165,6 @@ namespace DummySimulator
                     gated.Add((button, entry.RequiredLimb.Value));
                 }
             }
-        }
-
-        private static void SizeRowToWrappedText(RectTransform row, GUITextBlock block, LocalizedString text, int minHeight)
-        {
-            int width = block.RectTransform.NonScaledSize.X - (int)(block.Padding.X + block.Padding.Z);
-            string wrapped = width > 0 ? block.Font.WrapText(text.Value, width) : text.Value;
-
-            int height = Math.Max(minHeight, (int)MathF.Ceiling(block.Font.MeasureString(wrapped).Y));
-
-            row.MinSize = new Point(0, height);
-            row.MaxSize = new Point(int.MaxValue, height);
         }
 
         private static RichString LimbTooltip(bool limbMatches) => RichString.Rich(limbMatches

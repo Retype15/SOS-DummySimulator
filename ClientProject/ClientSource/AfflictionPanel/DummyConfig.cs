@@ -32,6 +32,7 @@ namespace DummySimulator.Configs
         {
             Logger.LogDebug("EJECUTING SAVE FROM DUMMY CONFIG...", level: LogLevel.Information);
             _dummyCharacterXMLRaw.SetIfNotEqual(DummyCharacterXML.ToString());
+            _dummyItemContents.SetIfNotEqual(ItemContents.Serialize());
 
             SaveChanges(Plugin.Instance.ConfigService);
         }
@@ -40,6 +41,16 @@ namespace DummySimulator.Configs
         {
             var l = new SOS.GUI.GUILayoutBuilder(rectT);
             l.Header("Dummy Manager Settings", Color.Gold);
+
+            l.NumberInput(
+                Texts.Get("sos.sim.contents_slots", "Contents slots").Value,
+                DummyContentsSlots,
+                value => DummyContentsSlots = (int)value,
+                min: 1,
+                max: 8,
+                step: 1,
+                tooltip: Texts.Get("sos.sim.contents_slots_tooltip", "Slot rows the Contents editor reserves room for.").Value);
+
             l.ButtonToResetSection(this);
             l.Separator();
         }
@@ -50,6 +61,9 @@ namespace DummySimulator.Configs
             DummyMedicalSkill = _dummyMedicalSkill.DefaultValue;
             DummySimulated = false;
             DummyCharacterXML = XElement.Parse("<Character />");
+            DummyItemContents = string.Empty;
+            DummyContentsSlots = _dummyContentsSlots.DefaultValue;
+            ItemContents.Reset();
             if (ClinicalSimulatorManager.Patient != null) ClinicalSimulatorManager.DiscardPatient();
         }
 
@@ -82,6 +96,21 @@ namespace DummySimulator.Configs
             set => _dummyCharacterXML = value;
         }
 
+        private readonly ISettingBase<string> _dummyItemContents;
+        public string DummyItemContents
+        {
+            get => _dummyItemContents.Value;
+            set => _dummyItemContents.SetIfNotEqual(value);
+        }
+
+        private readonly ISettingBase<int> _dummyContentsSlots;
+
+        public int DummyContentsSlots
+        {
+            get => _dummyContentsSlots.Value;
+            set => _dummyContentsSlots.SetIfNotEqual(value);
+        }
+
         public DummyConfig()
         {
             Logger.LogDebugWarning("EXECUTING DummyConfig CONSTRUCTOR...", level: LogLevel.Trace);
@@ -94,6 +123,8 @@ namespace DummySimulator.Configs
             TryInitConfig("DummyMedicalSkill", out _dummyMedicalSkill);
             TryInitConfig("DummySimulated", out _dummySimulated);
             TryInitConfig("DummyCharacterXML", out _dummyCharacterXMLRaw);
+            TryInitConfig("DummyItemContents", out _dummyItemContents);
+            TryInitConfig("DummyContentsSlots", out _dummyContentsSlots);
         }
 
         #region Migration methods

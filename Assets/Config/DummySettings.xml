@@ -6,5 +6,7 @@
         <Setting Name="DummyMedicalSkill" Type="int" Value="30" ShowInMenus="false" />
         <Setting Name="DummySimulated" Type="bool" Value="false" ShowInMenus="false" />
         <Setting Name="DummyCharacterXML" Type="string" Value="" ShowInMenus="false" />
+        <Setting Name="DummyItemContents" Type="string" Value="" ShowInMenus="false" />
+        <Setting Name="DummyContentsSlots" Type="int" Value="2" ShowInMenus="false" />
     </Settings>
 </Configuration>

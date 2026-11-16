@@ -449,6 +449,19 @@ namespace DummySimulator
             ItemContainer? container = item.GetComponent<ItemContainer>();
             if (container?.Inventory == null) return;
 
+            IReadOnlyDictionary<int, Identifier> selections = ItemContents.GetSelections(item.Prefab.Identifier);
+            if (selections.Count > 0)
+            {
+                foreach (var selection in selections.OrderBy(pair => pair.Key))
+                {
+                    if (ItemContents.FindPrefab(selection.Value) is not { } configuredPrefab) continue;
+
+                    TryAddContainedItem(container, configuredPrefab, selection.Key);
+                }
+
+                return;
+            }
+
             int usedSlots = container.Inventory.AllItems.Count();
 
             foreach (ItemComponent component in item.Components)
@@ -481,18 +494,26 @@ namespace DummySimulator
         private static ItemPrefab? FindMatchingPrefab(RelatedItem related)
             => ItemPrefab.Prefabs.Find(prefab => related.MatchesItem(prefab));
 
-        private static bool TryAddContainedItem(ItemContainer container, ItemPrefab prefab)
+        private static bool TryAddContainedItem(ItemContainer container, ItemPrefab prefab, int? slotIndex = null)
         {
-            Item contained = new(prefab, Vector2.Zero, null, id: GetFreshMockID());
+            Item contained = new(prefab, Vector2.Zero, null);
 
-            if (container.Inventory.TryPutItem(
-                contained,
-                user: null!,
-                createNetworkEvent: false,
-                triggerOnInsertedEffects: false))
-            {
-                return true;
-            }
+            bool added = slotIndex is { } index
+                ? container.Inventory.TryPutItem(
+                    contained,
+                    index,
+                    allowSwapping: false,
+                    allowCombine: false,
+                    user: null,
+                    createNetworkEvent: false,
+                    triggerOnInsertedEffects: false)
+                : container.Inventory.TryPutItem(
+                    contained,
+                    user: null,
+                    createNetworkEvent: false,
+                    triggerOnInsertedEffects: false);
+
+            if (added) return true;
 
             Entity.Spawner?.AddItemToRemoveQueue(contained);
             return false;
