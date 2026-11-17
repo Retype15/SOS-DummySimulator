@@ -11,12 +11,6 @@ using SOS;
 
 namespace DummySimulator
 {
-    /// <summary>
-    /// Makes every treatment button of the health window usable against the simulated subject.
-    /// Discovery is structural: the shared <c>recommendedTreatmentContainer</c> is only one of the
-    /// possible hosts, since UI mods may hide it and build per-limb lists of their own, with slots
-    /// nested inside intermediate layout groups.
-    /// </summary>
     internal static class TreatmentInjector
     {
         private const int MaxAncestorDepth = 16;
@@ -31,8 +25,7 @@ namespace DummySimulator
             if (health == null) return;
 
             GUIComponent? root = health.healthWindow;
-            if (root == null) root = health.recommendedTreatmentContainer;
-            if (root == null) return;
+            root ??= health.recommendedTreatmentContainer;
 
             if (PatchButtons(root))
             {

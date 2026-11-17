@@ -12,13 +12,6 @@ using SOS;
 
 namespace DummySimulator
 {
-    /// <summary>
-    /// Vanilla <see cref="Ragdoll.GetLimb"/> iterates the private <c>limbs</c> field, which is set to
-    /// null when the ragdoll is removed, while the public <see cref="Ragdoll.Limbs"/> property already
-    /// returns an empty array in that state. Mods that keep a reference to a removed character
-    /// (delayed timers, spawn callbacks) crash on that null dereference. Returning null mirrors the
-    /// rest of the API, and both known call sites already handle a null limb.
-    /// </summary>
     internal static class RagdollLifecycleGuard
     {
         private const string HarmonyId = "retype.sos.dummysimulator.ragdollguard";
@@ -31,8 +24,8 @@ namespace DummySimulator
 
             try
             {
-                MethodInfo? getLimb = AccessTools.Method(typeof(Ragdoll), nameof(Ragdoll.GetLimb));
-                if (getLimb == null) throw new MissingMethodException(typeof(Ragdoll).FullName, nameof(Ragdoll.GetLimb));
+                MethodInfo? getLimb = AccessTools.Method(typeof(Ragdoll), nameof(Ragdoll.GetLimb))
+                ?? throw new MissingMethodException(typeof(Ragdoll).FullName, nameof(Ragdoll.GetLimb));
 
                 harmony = new Harmony(HarmonyId);
                 harmony.Patch(getLimb, prefix: new HarmonyMethod(typeof(RagdollLifecycleGuard), nameof(GetLimbPrefix)));

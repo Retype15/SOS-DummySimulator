@@ -51,7 +51,7 @@ namespace DummySimulator
 
             LimbType? selectedLimb = ClinicalSimulatorManager.SelectedLimbType;
 
-            foreach ((GUIButton button, LimbType requiredLimb) in gated)
+            foreach (var (button, requiredLimb) in gated)
             {
                 bool matches = selectedLimb == requiredLimb;
                 if (button.Enabled == matches) continue;
