@@ -14,7 +14,7 @@ namespace DummySimulator
     internal static class NeurotraumaBridge
     {
         private const string NeurotraumaPackage = "Neurotrauma CS";
-        private const string SimulatedMarker = "luabotomy";
+        public const string SimulatedMarker = "luabotomy";
         private const float SimulatedMarkerStrength = 0.1f;
         private const float MaxSimulatedDeltaTime = 1f;
         private const int MaxStepsPerFrame = 32;

@@ -71,12 +71,10 @@ namespace DummySimulator
             public static readonly FieldInfo? CharacterNameField = typeof(CharacterHealth).GetField("characterName", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly FieldInfo? HealthWindowField = typeof(CharacterHealth).GetField("healthWindow", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly MethodInfo? HealthBiologicalUpdateMethod = typeof(CharacterHealth).GetMethod("Update", [typeof(float)]);
-            public static readonly FieldInfo? SelectedCharField = typeof(Character).GetField("selectedCharacter", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly FieldInfo? TooltipField = typeof(CharacterHealth).GetField("afflictionTooltip", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly FieldInfo? HighlightedLimbField = typeof(CharacterHealth).GetField("highlightedLimbIndex", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly FieldInfo? TreatmentContainerField = typeof(CharacterHealth).GetField("recommendedTreatmentContainer", BindingFlags.NonPublic | BindingFlags.Instance);
             public static readonly FieldInfo? SelectedLimbIndexField = typeof(CharacterHealth).GetField("selectedLimbIndex", BindingFlags.NonPublic | BindingFlags.Instance);
-            public static readonly FieldInfo? OpenHealthWindowField = typeof(CharacterHealth).GetField("openHealthWindow", BindingFlags.NonPublic | BindingFlags.Static);
             public static readonly FieldInfo? IsDeadField = typeof(Character).GetField("isDead", BindingFlags.NonPublic | BindingFlags.Instance);
 
             public static bool Validate()
@@ -85,12 +83,10 @@ namespace DummySimulator
                 if (CharacterNameField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'characterName' field not found in CharacterHealth."); allValid = false; }
                 if (HealthWindowField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'healthWindow' field not found in CharacterHealth."); allValid = false; }
                 if (HealthBiologicalUpdateMethod == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'Update(float)' method not found in CharacterHealth."); allValid = false; }
-                if (SelectedCharField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'selectedCharacter' field not found in Character."); allValid = false; }
                 if (TooltipField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'afflictionTooltip' field not found in CharacterHealth."); allValid = false; }
                 if (HighlightedLimbField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'highlightedLimbIndex' field not found in CharacterHealth."); allValid = false; }
                 if (TreatmentContainerField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'recommendedTreatmentContainer' field not found in CharacterHealth."); allValid = false; }
                 if (SelectedLimbIndexField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'selectedLimbIndex' field not found in CharacterHealth."); allValid = false; }
-                if (OpenHealthWindowField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'openHealthWindow' field not found in CharacterHealth."); allValid = false; }
                 if (IsDeadField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'isDead' field not found in Character."); allValid = false; }
                 return allValid;
             }
@@ -102,6 +98,37 @@ namespace DummySimulator
         public static readonly FieldInfo? HighlightedLimbField = MedicalReflector.HighlightedLimbField;
         public static readonly FieldInfo? TreatmentContainerField = MedicalReflector.TreatmentContainerField;
         public static readonly FieldInfo? SelectedLimbIndexField = MedicalReflector.SelectedLimbIndexField;
+
+        private readonly struct HealthWindowScope : IDisposable
+        {
+            private readonly Character? controlled;
+            private readonly Character? previousSelected;
+            private readonly CharacterHealth? previousWindow;
+
+            private HealthWindowScope(Character patient)
+            {
+                controlled = Character.Controlled;
+                previousSelected = controlled?.selectedCharacter;
+                previousWindow = CharacterHealth.openHealthWindow;
+
+                if (controlled != null) controlled.selectedCharacter = patient;
+                CharacterHealth.openHealthWindow = patient.CharacterHealth;
+            }
+
+            public static HealthWindowScope Enter(Character patient) => new(patient);
+
+            public void Dispose()
+            {
+                CharacterHealth.openHealthWindow = previousWindow;
+
+                if (controlled != null) controlled.selectedCharacter = previousSelected;
+            }
+        }
+
+        private static bool IsSimulationMarker(AfflictionPrefab prefab)
+            => prefab.Identifier.Value.Equals(NeurotraumaBridge.SimulatedMarker, StringComparison.OrdinalIgnoreCase);
+
+        private static bool IsPersistableAffliction(AfflictionPrefab prefab) => !IsSimulationMarker(prefab);
 
         // MARK: Dummy Subject
         public class DummySubject
@@ -148,8 +175,8 @@ namespace DummySimulator
             public void Discard()
             {
                 RescueNativeWindow();
-                if (CharacterHealth.OpenHealthWindow == Character.CharacterHealth)
-                    MedicalReflector.OpenHealthWindowField?.SetValue(null, null);
+                if (CharacterHealth.openHealthWindow == Character.CharacterHealth)
+                    CharacterHealth.openHealthWindow = null;
 
                 NeurotraumaBridge.Detach(Character);
 
@@ -198,7 +225,7 @@ namespace DummySimulator
                     XElement? healthNode = element.Element("health");
                     if (healthNode != null)
                     {
-                        CharacterInfo.ApplyHealthData(Patient, healthNode);
+                        CharacterInfo.ApplyHealthData(Patient, healthNode, IsPersistableAffliction);
                         MedicalReflector.HealthBiologicalUpdateMethod?.Invoke(Patient?.CharacterHealth, [0f]);
                         Patient?.CharacterHealth.CalculateVitality();
                         NeurotraumaBridge.Attach(Patient);
@@ -288,6 +315,8 @@ namespace DummySimulator
 
             if (Patient.InvisibleTimer < 1.0f) Patient.InvisibleTimer = float.MaxValue;
 
+            using var windowScope = HealthWindowScope.Enter(Patient);
+
             Patient.CharacterHealth.UpdateClientSpecific(deltaTime);
             PurgeItems();
 
@@ -303,14 +332,7 @@ namespace DummySimulator
                 NeurotraumaBridge.Tick(Patient, dt);
             }
 
-            var controlled = Character.Controlled;
-            if (controlled == null) return;
-
-            var prevSelected = MedicalReflector.SelectedCharField?.GetValue(controlled) as Character;
-            MedicalReflector.SelectedCharField?.SetValue(controlled, Patient);
-
-            var prevOpenHealthWindow = MedicalReflector.OpenHealthWindowField?.GetValue(null) as CharacterHealth;
-            MedicalReflector.OpenHealthWindowField?.SetValue(null, Patient.CharacterHealth);
+            if (Character.Controlled == null) return;
 
             if (MedicalReflector.CharacterNameField?.GetValue(Patient.CharacterHealth) is GUITextBlock nameBlock)
             {
@@ -334,42 +356,13 @@ namespace DummySimulator
 
             MaybeKillDummy();
 
-            if (MedicalReflector.TreatmentContainerField?.GetValue(Patient.CharacterHealth) is GUIListBox treatmentList)
-            {
-                foreach (GUIComponent component in treatmentList.Content.Children)
-                {
-                    if (component.GetChild<GUIButton>() is GUIButton treatmentBtn && treatmentBtn.UserData is ItemPrefab medPrefab)
-                    {
-                        bool wasDisabled = !treatmentBtn.Enabled;
-
-                        treatmentBtn.Enabled = true;
-                        foreach (var child in treatmentBtn.Children) child.Enabled = true;
-
-                        treatmentBtn.OnClicked = (btn, userData) =>
-                        {
-                            int selectedIndex = (int)(MedicalReflector.SelectedLimbIndexField?.GetValue(Patient.CharacterHealth) ?? -1);
-                            Limb? targetLimb = selectedIndex >= 0 ? Patient.AnimController.Limbs.FirstOrDefault(l => l.HealthIndex == selectedIndex) : null;
-
-                            ApplyMockItem(medPrefab, targetLimb);
-                            return true;
-                        };
-
-                        if (wasDisabled)
-                        {
-                            string colorHex = Color.LightSkyBlue.ToStringHex();
-                            treatmentBtn.ToolTip = RichString.Rich($"‖color:{colorHex}‖[SIMULATION MODE]‖color:end‖\n‖color:255,255,255,255‖{medPrefab.Name.Value}‖color:end‖\n{medPrefab.Description}");
-                        }
-                    }
-                }
-            }
-
-            MedicalReflector.OpenHealthWindowField?.SetValue(null, prevOpenHealthWindow);
-            MedicalReflector.SelectedCharField?.SetValue(controlled, prevSelected);
+            TreatmentInjector.Inject(Patient.CharacterHealth);
         }
 
         public static void ApplyMockItem(ItemPrefab prefab, Limb? targetLimb)
         {
             if (Patient == null) return;
+            using var windowScope = HealthWindowScope.Enter(Patient);
             Item? mockItem = null;
             isApplyingItem = true;
             try
@@ -534,8 +527,9 @@ namespace DummySimulator
         public static void ApplySurgery(string itemIdentifier)
         {
             Limb? limb = SelectedLimb;
-            if (limb == null) return;
+            if (limb == null || Patient == null) return;
 
+            using var windowScope = HealthWindowScope.Enter(Patient);
             NeurotraumaBridge.ApplySurgeryFunction(itemIdentifier, Patient, Patient, limb);
         }
 
@@ -623,6 +617,9 @@ namespace DummySimulator
         public static void InjectAffliction(AfflictionPrefab prefab, float strength, Limb? targetLimb = null)
         {
             if (Patient?.CharacterHealth == null) return;
+
+            using var windowScope = HealthWindowScope.Enter(Patient);
+
             var inst = prefab.Instantiate(strength);
             var limb = targetLimb ?? Patient.AnimController.GetLimb(prefab.IndicatorLimb != LimbType.None ? prefab.IndicatorLimb : LimbType.Torso) ?? Patient.AnimController.MainLimb;
             Patient.CharacterHealth.ApplyAffliction(limb, inst);
@@ -734,6 +731,9 @@ namespace DummySimulator
             {
                 try
                 {
+                    HideSubtree(hijackedNativeWindow);
+                    hijackedNativeWindow.RemoveFromGUIUpdateList();
+
                     if (hijackedNativeWindow.RectTransform != null)
                     {
                         hijackedNativeWindow.RectTransform.Parent = null;
@@ -750,6 +750,35 @@ namespace DummySimulator
             }
         }
 
+        private static void HideSubtree(GUIComponent component)
+        {
+            component.Visible = false;
+
+            for (int i = 0; i < component.CountChildren; i++)
+            {
+                GUIComponent? child = component.GetChild(i);
+                if (child != null) HideSubtree(child);
+            }
+        }
+
+        private static void RemoveSimulationMarkers(XElement healthElement)
+        {
+            RemoveMarkerAfflictions(healthElement);
+
+            foreach (XElement limbElement in healthElement.Elements("LimbHealth"))
+            {
+                RemoveMarkerAfflictions(limbElement);
+            }
+        }
+
+        private static void RemoveMarkerAfflictions(XElement container)
+        {
+            container.Elements("Affliction")
+                .Where(affliction => affliction.Attribute("identifier")?.Value is { } identifier
+                    && identifier.Equals(NeurotraumaBridge.SimulatedMarker, StringComparison.OrdinalIgnoreCase))
+                .Remove();
+        }
+
         public static XElement? ExportSaveData()
         {
             if (Patient == null) return null;
@@ -760,6 +789,7 @@ namespace DummySimulator
 
                 XElement healthElement = new("health");
                 Patient.CharacterHealth.Save(healthElement);
+                RemoveSimulationMarkers(healthElement);
 
                 root.Add(healthElement);
 
@@ -781,8 +811,8 @@ namespace DummySimulator
 
             RescueNativeWindow();
 
-            if (CharacterHealth.OpenHealthWindow == Patient?.CharacterHealth)
-                MedicalReflector.OpenHealthWindowField?.SetValue(null, null);
+            if (CharacterHealth.openHealthWindow == Patient?.CharacterHealth)
+                CharacterHealth.openHealthWindow = null;
 
             if (Patient?.Inventory != null)
             {

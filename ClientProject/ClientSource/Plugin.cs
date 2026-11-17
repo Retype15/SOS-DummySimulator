@@ -19,6 +19,7 @@ namespace DummySimulator
         public static void InitClient()
         {
             Logger.LogDebug("DummySimulator.InitClient Executed...", level: LogLevel.Trace);
+            RagdollLifecycleGuard.Install();
             API.On(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy, EventPriority.System);
 
             API.RegisterConfig(() => DummyConfig.Instance, DummyConfig.ID, 1);
@@ -31,6 +32,7 @@ namespace DummySimulator
         [Conditional("CLIENT")]
         public static void DisposeClient()
         {
+            RagdollLifecycleGuard.Uninstall();
             API.Off(CommKeys.CloseWindow, ClinicalSimulatorManager.Destroy, EventPriority.System);
 
             API.Off<int>("SOS.Migration.DummyDeathCount", DummyConfig.Instance.MigrateDummyDeathCount, EventPriority.State);

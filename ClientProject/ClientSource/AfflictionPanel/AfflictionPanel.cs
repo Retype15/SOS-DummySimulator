@@ -22,11 +22,14 @@ namespace DummySimulator
         private static GUIComponent? activeAfflictionMenu;
         private static Prefab? CurrentPrefab;
         private GUIListBox? _affList;
+        private GUIFrame? _rootContainer;
 
         public bool CanHandle(Prefab prefab) => prefab is ItemPrefab || prefab is AfflictionPrefab;
 
         public void Init(GUIFrame container, GUIButton tabButton)
         {
+            _rootContainer = container;
+
             var simView = new GUIFrame(new RectTransform(new Vector2(1f, 0.88f), container.RectTransform, Anchor.TopCenter), style: null)
             {
                 CanBeFocused = false
@@ -353,6 +356,10 @@ namespace DummySimulator
             activeAfflictionMenu?.Parent?.RemoveChild(activeAfflictionMenu);
             activeAfflictionMenu = null;
             SimulatorColumn.Detach();
+
+            _rootContainer?.RemoveFromGUIUpdateList();
+            _rootContainer = null;
+
             GC.SuppressFinalize(this);
         }
 
