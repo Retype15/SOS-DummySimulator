@@ -32,6 +32,9 @@
 	<sos.sim.contents_slots>Contents slots</sos.sim.contents_slots>
 	<sos.sim.contents_slots_tooltip>Slot rows the Contents editor reserves room for.</sos.sim.contents_slots_tooltip>
 
+	<!-- Dummy -->
+	<sos.dummy.initialize.error>Error trying to apply reflection methods, skipping...</sos.dummy.initialize.error>
+
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Dummy Subject #[id]</sos.dummyname.rand.1>
 	<sos.dummyname.rand.2>Not A Real Person #[id]</sos.dummyname.rand.2>

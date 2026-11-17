@@ -14,6 +14,26 @@
 	<sos.sim.remove_tooltip>Elimina esta aflicción del paciente.</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>Simula el uso de este objeto en el paciente para ver sus efectos.</sos.sim.apply_item_tooltip>
 	<sos.sim.close_button>Cierra este menú.</sos.sim.close_button>
+	<sos.sim.medical_skill>MED</sos.sim.medical_skill>
+	<sos.sim.medical_skill_tooltip>Habilidad médica con la que opera el maniquí.</sos.sim.medical_skill_tooltip>
+
+	<!-- Surgery -->
+	<sos.sim.surgery_tools>Herramientas de cirugía</sos.sim.surgery_tools>
+	<sos.sim.surgery_organs>Órganos</sos.sim.surgery_organs>
+	<sos.sim.surgery_back>Atrás</sos.sim.surgery_back>
+	<sos.sim.surgery_back_tooltip>Vuelve a la lista completa de herramientas.</sos.sim.surgery_back_tooltip>
+	<sos.sim.surgery_organ_ready>Opera la extremidad seleccionada.</sos.sim.surgery_organ_ready>
+	<sos.sim.surgery_organ_limb>Selecciona primero la extremidad correspondiente.</sos.sim.surgery_organ_limb>
+
+	<!-- Item Contents -->
+	<sos.sim.contents_header>Contenido</sos.sim.contents_header>
+	<sos.sim.contents_none>Ninguno</sos.sim.contents_none>
+	<sos.sim.contents_slot_tooltip>Haz clic para elegir qué contiene esta ranura.</sos.sim.contents_slot_tooltip>
+	<sos.sim.contents_slots>Ranuras de contenido</sos.sim.contents_slots>
+	<sos.sim.contents_slots_tooltip>Filas de ranuras para las que el editor de contenido reserva espacio.</sos.sim.contents_slots_tooltip>
+
+	<!-- Dummy -->
+	<sos.dummy.initialize.error>Error al intentar aplicar los métodos de reflexión; se omite...</sos.dummy.initialize.error>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Sujeto de Prueba #[id]</sos.dummyname.rand.1>
