@@ -9,6 +9,7 @@ using Barotrauma;
 using Barotrauma.Items.Components;
 using DummySimulator.Configs;
 using Microsoft.Xna.Framework;
+using SOS;
 
 namespace DummySimulator
 {
@@ -183,7 +184,7 @@ namespace DummySimulator
                 List<Identifier>[]? restrictions = GetSlotRestrictions(container);
                 if (restrictions == null)
                 {
-                    LuaCsLogger.Log($"[SOS] Could not read the inventory restrictions of '{prefab.Identifier}'. Every slot will be shown.", Color.Orange);
+                    Logger.Log($"[SOS] Could not read the inventory restrictions of '{prefab.Identifier}'. Every slot will be shown.", Color.Orange);
                 }
 
                 var slots = new List<ContainedSlot>();
@@ -201,7 +202,7 @@ namespace DummySimulator
                     {
                         if (restrictions != null)
                         {
-                            LuaCsLogger.Log($"[SOS] Slot {index} of '{prefab.Identifier}' is restricted to [{string.Join(", ", restrictions[index])}], but no loaded prefab matches it.", Color.Orange);
+                            Logger.Log($"[SOS] Slot {index} of '{prefab.Identifier}' is restricted to [{string.Join(", ", restrictions[index])}], but no loaded prefab matches it.", Color.Orange);
                         }
                         continue;
                     }
@@ -213,7 +214,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Failed to read the inventory slots of '{prefab.Identifier}': {e}");
+                Logger.LogError($"[SOS] Failed to read the inventory slots of '{prefab.Identifier}': {e}");
                 return [];
             }
             finally

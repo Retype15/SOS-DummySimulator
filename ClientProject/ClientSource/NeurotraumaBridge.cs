@@ -8,6 +8,7 @@
 using System.Runtime.CompilerServices;
 using Barotrauma;
 using Neurotrauma;
+using SOS;
 
 namespace DummySimulator
 {
@@ -79,7 +80,7 @@ namespace DummySimulator
                 NTHuman? targetHuman = NTHuman.getNTHumanFromCharacter(target);
                 if (userHuman == null || targetHuman == null)
                 {
-                    LuaCsLogger.LogError($"[SOS] No Neurotrauma state for the dummy; skipping '{itemIdentifier}'.");
+                    Logger.LogError($"[SOS] No Neurotrauma state for the dummy; skipping '{itemIdentifier}'.");
                     return;
                 }
 
@@ -87,7 +88,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Neurotrauma item treatment failed for '{item.Prefab.Identifier}': {e.Message}");
+                Logger.LogError($"[SOS] Neurotrauma item treatment failed for '{item.Prefab.Identifier}': {e.Message}");
             }
         }
 
@@ -103,7 +104,7 @@ namespace DummySimulator
                 NTHuman? targetHuman = NTHuman.getNTHumanFromCharacter(target);
                 if (userHuman == null || targetHuman == null)
                 {
-                    LuaCsLogger.LogError($"[SOS] No Neurotrauma state for the dummy; skipping '{itemIdentifier}'.");
+                    Logger.LogError($"[SOS] No Neurotrauma state for the dummy; skipping '{itemIdentifier}'.");
                     return;
                 }
 
@@ -111,7 +112,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Neurotrauma surgery function failed for '{itemIdentifier}': {e.Message}");
+                Logger.LogError($"[SOS] Neurotrauma surgery function failed for '{itemIdentifier}': {e.Message}");
             }
         }
 
@@ -187,7 +188,7 @@ namespace DummySimulator
             stepFailureCount++;
 
             if (stepFailureCount <= 3 || stepFailureCount % 300 == 0)
-                LuaCsLogger.LogError($"[SOS] Neurotrauma step failed ({stepFailureCount} times): {e}");
+                Logger.LogError($"[SOS] Neurotrauma step failed ({stepFailureCount} times): {e}");
         }
 
         private static void ResetSteps(Character? character)

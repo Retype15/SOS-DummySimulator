@@ -80,14 +80,14 @@ namespace DummySimulator
             public static bool Validate()
             {
                 bool allValid = true;
-                if (CharacterNameField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'characterName' field not found in CharacterHealth."); allValid = false; }
-                if (HealthWindowField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'healthWindow' field not found in CharacterHealth."); allValid = false; }
-                if (HealthBiologicalUpdateMethod == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'Update(float)' method not found in CharacterHealth."); allValid = false; }
-                if (TooltipField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'afflictionTooltip' field not found in CharacterHealth."); allValid = false; }
-                if (HighlightedLimbField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'highlightedLimbIndex' field not found in CharacterHealth."); allValid = false; }
-                if (TreatmentContainerField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'recommendedTreatmentContainer' field not found in CharacterHealth."); allValid = false; }
-                if (SelectedLimbIndexField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'selectedLimbIndex' field not found in CharacterHealth."); allValid = false; }
-                if (IsDeadField == null) { LuaCsLogger.LogError("[SOS] Reflection Error: 'isDead' field not found in Character."); allValid = false; }
+                if (CharacterNameField == null) { Logger.LogError("[SOS] Reflection Error: 'characterName' field not found in CharacterHealth."); allValid = false; }
+                if (HealthWindowField == null) { Logger.LogError("[SOS] Reflection Error: 'healthWindow' field not found in CharacterHealth."); allValid = false; }
+                if (HealthBiologicalUpdateMethod == null) { Logger.LogError("[SOS] Reflection Error: 'Update(float)' method not found in CharacterHealth."); allValid = false; }
+                if (TooltipField == null) { Logger.LogError("[SOS] Reflection Error: 'afflictionTooltip' field not found in CharacterHealth."); allValid = false; }
+                if (HighlightedLimbField == null) { Logger.LogError("[SOS] Reflection Error: 'highlightedLimbIndex' field not found in CharacterHealth."); allValid = false; }
+                if (TreatmentContainerField == null) { Logger.LogError("[SOS] Reflection Error: 'recommendedTreatmentContainer' field not found in CharacterHealth."); allValid = false; }
+                if (SelectedLimbIndexField == null) { Logger.LogError("[SOS] Reflection Error: 'selectedLimbIndex' field not found in CharacterHealth."); allValid = false; }
+                if (IsDeadField == null) { Logger.LogError("[SOS] Reflection Error: 'isDead' field not found in Character."); allValid = false; }
                 return allValid;
             }
         }
@@ -237,7 +237,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Failed to load saved Dummy XML: {e.Message}");
+                Logger.LogError($"[SOS] Failed to load saved Dummy XML: {e.Message}");
             }
 
             if (!loadedSuccessfully)
@@ -422,7 +422,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Simulation Mock Item Error: {e.Message}");
+                Logger.LogError($"[SOS] Simulation Mock Item Error: {e.Message}");
             }
             finally
             {
@@ -797,7 +797,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Error exporting native Dummy save data: {e.Message}");
+                Logger.LogError($"[SOS] Error exporting native Dummy save data: {e.Message}");
                 return null;
             }
         }

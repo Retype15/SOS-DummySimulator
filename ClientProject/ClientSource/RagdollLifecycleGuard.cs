@@ -34,7 +34,7 @@ namespace DummySimulator
             catch (Exception e)
             {
                 harmony = null;
-                LuaCsLogger.LogError($"[SOS] Failed to install the ragdoll lifecycle guard: {e.Message}");
+                Logger.LogError($"[SOS] Failed to install the ragdoll lifecycle guard: {e.Message}");
             }
         }
 
@@ -48,7 +48,7 @@ namespace DummySimulator
             }
             catch (Exception e)
             {
-                LuaCsLogger.LogError($"[SOS] Failed to remove the ragdoll lifecycle guard: {e.Message}");
+                Logger.LogError($"[SOS] Failed to remove the ragdoll lifecycle guard: {e.Message}");
             }
             finally
             {

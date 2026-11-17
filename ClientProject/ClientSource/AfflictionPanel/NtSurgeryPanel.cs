@@ -203,11 +203,11 @@ namespace DummySimulator
 
                     if (field?.GetValue(null) is List<ButtonData> entries) return entries;
 
-                    LuaCsLogger.LogError($"[SOS] Could not find '{DefinitionsTypeName}.Entries'; the surgery column stays empty.");
+                    Logger.LogError($"[SOS] Could not find '{DefinitionsTypeName}.Entries'; the surgery column stays empty.");
                 }
                 catch (Exception e)
                 {
-                    LuaCsLogger.LogError($"[SOS] Failed to read the Neurotrauma surgery buttons: {e.Message}");
+                    Logger.LogError($"[SOS] Failed to read the Neurotrauma surgery buttons: {e.Message}");
                 }
 
                 return [];
