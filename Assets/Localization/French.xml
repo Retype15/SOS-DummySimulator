@@ -14,6 +14,26 @@
 	<sos.sim.remove_tooltip>Retire cette affection du patient.</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>Simule l'utilisation de cet objet sur le patient pour voir ses effets.</sos.sim.apply_item_tooltip>
 	<sos.sim.close_button>Ferme ce menu.</sos.sim.close_button>
+	<sos.sim.medical_skill>MED</sos.sim.medical_skill>
+	<sos.sim.medical_skill_tooltip>Compétence médicale avec laquelle opère le mannequin.</sos.sim.medical_skill_tooltip>
+
+	<!-- Surgery -->
+	<sos.sim.surgery_tools>Outils de chirurgie</sos.sim.surgery_tools>
+	<sos.sim.surgery_organs>Organes</sos.sim.surgery_organs>
+	<sos.sim.surgery_back>Retour</sos.sim.surgery_back>
+	<sos.sim.surgery_back_tooltip>Revient à la liste complète des outils.</sos.sim.surgery_back_tooltip>
+	<sos.sim.surgery_organ_ready>Opère le membre sélectionné.</sos.sim.surgery_organ_ready>
+	<sos.sim.surgery_organ_limb>Sélectionnez d'abord le membre correspondant.</sos.sim.surgery_organ_limb>
+
+	<!-- Item Contents -->
+	<sos.sim.contents_header>Contenu</sos.sim.contents_header>
+	<sos.sim.contents_none>Aucun</sos.sim.contents_none>
+	<sos.sim.contents_slot_tooltip>Cliquez pour choisir ce que contient cet emplacement.</sos.sim.contents_slot_tooltip>
+	<sos.sim.contents_slots>Emplacements de contenu</sos.sim.contents_slots>
+	<sos.sim.contents_slots_tooltip>Lignes d'emplacements pour lesquelles l'éditeur de contenu réserve de la place.</sos.sim.contents_slots_tooltip>
+
+	<!-- Dummy -->
+	<sos.dummy.initialize.error>Erreur lors de l'application des méthodes de réflexion, étape ignorée...</sos.dummy.initialize.error>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>Sujet Factice #[id]</sos.dummyname.rand.1>

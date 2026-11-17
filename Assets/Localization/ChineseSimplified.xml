@@ -14,6 +14,26 @@
 	<sos.sim.remove_tooltip>从患者身上移除这种病症。</sos.sim.remove_tooltip>
 	<sos.sim.apply_item_tooltip>模拟在患者身上使用此物品以查看其效果。</sos.sim.apply_item_tooltip>
 	<sos.sim.close_button>关闭此菜单。</sos.sim.close_button>
+	<sos.sim.medical_skill>医疗</sos.sim.medical_skill>
+	<sos.sim.medical_skill_tooltip>假人操作时使用的医疗技能。</sos.sim.medical_skill_tooltip>
+
+	<!-- Surgery -->
+	<sos.sim.surgery_tools>手术工具</sos.sim.surgery_tools>
+	<sos.sim.surgery_organs>器官</sos.sim.surgery_organs>
+	<sos.sim.surgery_back>返回</sos.sim.surgery_back>
+	<sos.sim.surgery_back_tooltip>返回完整工具列表。</sos.sim.surgery_back_tooltip>
+	<sos.sim.surgery_organ_ready>对所选肢体进行手术。</sos.sim.surgery_organ_ready>
+	<sos.sim.surgery_organ_limb>请先选择对应的肢体。</sos.sim.surgery_organ_limb>
+
+	<!-- Item Contents -->
+	<sos.sim.contents_header>内容</sos.sim.contents_header>
+	<sos.sim.contents_none>无</sos.sim.contents_none>
+	<sos.sim.contents_slot_tooltip>点击选择此槽位存放的内容。</sos.sim.contents_slot_tooltip>
+	<sos.sim.contents_slots>内容槽位</sos.sim.contents_slots>
+	<sos.sim.contents_slots_tooltip>内容编辑器为其保留空间的槽位行。</sos.sim.contents_slots_tooltip>
+
+	<!-- Dummy -->
+	<sos.dummy.initialize.error>尝试应用反射方法时出错，已跳过...</sos.dummy.initialize.error>
 
 	<!-- Dummie Names -->
 	<sos.dummyname.rand.1>假人对象 #[id]</sos.dummyname.rand.1>
